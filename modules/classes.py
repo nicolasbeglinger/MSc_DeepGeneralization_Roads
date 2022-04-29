@@ -10,12 +10,12 @@ class Road(object):
             feature_dict['geometry']['coordinates'])
 
         self.properties = feature_dict['properties']
-        self.num_vertices = feature_dict['properties']['num_vertices']
+        self.n_vertices = feature_dict['properties']['n_vertices']
 
         self.exagg_value = {0: 0, 1: 0}
 
     def __repr__(self):
-        return f"Road with {self.properties['num_vertices']} vertices"
+        return f"Road with {self.properties['n_vertices']} vertices"
 
     def exaggerate_axis(self, axis, factor):
         if self.exagg_value[axis] != factor:
@@ -71,7 +71,7 @@ class Graph(object):
             "coordinates": node.coords,
             "translation_vectors": node.translation_vector,
             "properties": node.properties,
-            "x": node.properties[:-1],
+            "x": node.properties[:-2],
             "y": node.translation_vector} for node in self.nodes}
 
     def __repr__(self):
