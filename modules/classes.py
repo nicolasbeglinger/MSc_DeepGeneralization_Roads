@@ -1,5 +1,6 @@
 import numpy as np
 import numbers
+from scipy import sparse as sp
 from copy import copy
 
 
@@ -58,7 +59,10 @@ class Vertex(object):
 
 
 class Graph(object):
-    def __init__(self, nodes):
+    def __init__(self, nodes: list):
+        assert isinstance(
+            nodes, list), f"Input must be of type list, not {type(nodes)}"
+
         self.nodes = nodes
 
         self.adj_matrix = np.zeros((len(self.nodes), len(self.nodes)))
@@ -66,6 +70,9 @@ class Graph(object):
         for node in self.nodes:
             for connection in node.connections:
                 self.adj_matrix[node.index, connection] = 1
+
+        sparse_matrix = sp.coo_matrix(self.adj_matrix)
+        self.edge_index = np.vstack((sparse_matrix.row, sparse_matrix.col))
 
         self.node_dict = {node.index: {
             "coordinates": node.coords,
@@ -75,4 +82,4 @@ class Graph(object):
             "y": node.translation_vector} for node in self.nodes}
 
     def __repr__(self):
-        return f"Graph: {len(self.nodes)} Nodes"
+        return f"Graph: {len(self.nodes)} Nodes and {self.edge_index.shape(1)} Edges"
